@@ -5,7 +5,7 @@
 <html lang="en">
 
     <head>
-        <title>Danh sách nhân viên | Quản trị Admin | Watch-Pro</title>
+        <title>Danh sách nhân viên | Quản trị Admin1 | Watch-Pro</title>
 
        
         <link rel="shortcut icon" type="image/x-icon" href="img/logo.jpg" />
