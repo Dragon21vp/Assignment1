@@ -9,7 +9,7 @@
 <html>  
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Login</title>
+        <title>Register</title>
     </head>
     <body>
         <h3><center>Register</center></h3>
@@ -22,6 +22,21 @@
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter email" required>
+
+            <label for="phone">Phone number</label>
+            <input type="phone" id="phone" name="phone" placeholder="Enter phone number" required>
+
+            <label for ="department">Department</label>
+            <select class="form-select" id="exampleFormControlSelect1" name="departmentId">
+                <c:forEach items="${requestScope.dlist}" var="d">
+                    <option value="${d.getDepartmentId()}">
+                        ${d.getDepartmentName()}
+                    </option>
+                </c:forEach>
+            </select>
 
             <input type="submit" value="Register">
             <a href="login">Already have an account? Login here</a>

@@ -26,7 +26,7 @@
                    ${cookie.crem!=null?'checked':''}
                    name="rem" value="ON"/> Remember me<br/>
             <input type="submit" value="Login"></p>
-            <a href="register.jsp">Register</a>
+            <a href="register">Register</a>
 
         </form>		
         <c:if test="${not empty ms}">
