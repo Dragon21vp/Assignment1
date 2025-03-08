@@ -16,6 +16,7 @@ INSERT INTO [dbo].[Department] (DepartmentName) VALUES (N'Sale')
 INSERT INTO [dbo].[Status] (StatusName) VALUES (N'Inprogress')
 INSERT INTO [dbo].[Status] (StatusName) VALUES (N'Approved')
 INSERT INTO [dbo].[Status] (StatusName) VALUES (N'Rejected')
+INSERT INTO [dbo].[Status] (StatusName) VALUES (N'Canceled')
 
 --User
 INSERT INTO [dbo].Users (Username, Password, Name, Email, Phone, DepartmentID, RoleID, Status) 
@@ -44,3 +45,18 @@ INSERT INTO [dbo].Users (Username, Password, Name, Email, Phone, DepartmentID, R
 VALUES (N'stsale1', N'123', N'Phúc Du', N'phucdu@gmail.com', '0987-654-331', 3, 3, 1)
 INSERT INTO [dbo].Users (Username, Password, Name, Email, Phone, DepartmentID, RoleID, Status) 
 VALUES (N'stsale2', N'123', N'Bray', N'bray@gmail.com', '0987-654-332', 3, 3, 1)
+
+
+--Application
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID) 
+VALUES (2, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 1)
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID, ApproverID) 
+VALUES (2, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 2, 2)
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID, ApproverID) 
+VALUES (2, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 3, 2)
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID) 
+VALUES (8, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 1)
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID, ApproverID) 
+VALUES (8, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 2, 2)
+INSERT INTO [dbo].Application (UserId, StartDate, EndDate, Title, Reason, StatusID, ApproverID) 
+VALUES (8, CAST(N'2025-03-05' AS Date), CAST(N'2025-03-07' AS Date), N'Đơn xin nghỉ ốm', N'Tôi bị ốm', 3, 2)

@@ -106,8 +106,7 @@ CREATE TABLE [Application] (
 	Title NVARCHAR(300),
 	Reason NVARCHAR(1500),
 	StatusID INT,
-	ApproverID INT,
-	IsCancel INT
+	ApproverID INT NULL
 	FOREIGN KEY (UserID) REFERENCES Users(UserID),
 	FOREIGN KEY (ApproverID) REFERENCES Users(UserID)
 );

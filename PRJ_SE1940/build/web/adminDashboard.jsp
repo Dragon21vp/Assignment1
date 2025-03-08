@@ -27,9 +27,7 @@
     </head>
 
     <body onload="time()" class="app sidebar-mini rtl">
-        <form name="l" action="login" method="get">
-            <input type="hidden"  name="status" value="0"/>               
-        </form>
+        
         <!-- Navbar-->
 
         <header class="app-header">
@@ -40,7 +38,7 @@
 
 
                 <!-- User Menu-->
-                <li><a class="app-nav__item" onclick="logout()"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+                <li><a class="app-nav__item" href="logout"><i class='bx bx-log-out bx-rotate-180'></i>Logout </a>
 
                 </li>
             </ul>
@@ -60,13 +58,6 @@
                             class="app-menu__label">Bảng điều khiển</span></a></li>
                 <li><a class="app-menu__item" href="adminUserManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Quản lý người dùng</span></a></li>
-                <li><a class="app-menu__item" href="productmanager"><i
-                            class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
-                </li>
-                <li><a class="app-menu__item" href="ordermanager"><i class='app-menu__icon bx bx-task'></i><span
-                            class="app-menu__label">Quản lý đơn hàng</span></a></li>
-                <li><a class="app-menu__item" href="moneyrequestmanager" ><i class='app-menu__icon bx bx-task'></i><span
-                            class="app-menu__label">Quản lý yêu cầu nạp tiền </span></a></li>
             </ul>
         </aside>
         <main class="app-content">
@@ -95,7 +86,7 @@
                         </div>
                         <!-- col-6 -->
                         <div class="col-md-6">
-                            <div class="widget-small info coloured-icon"><i class='icon bx bxs-data fa-3x'></i>
+                            <div class="widget-small info coloured-icon"><i class='icon bx bxs-user-account fa-3x'></i>
                                 <div class="info">
                                     <h4>Tổng số trưởng phòng</h4>
                                     <p><b>${requestScope.dmUser} người</b></p>
@@ -105,7 +96,7 @@
                         </div>
                         <!-- col-6 -->
                         <div class="col-md-6">
-                            <div class="widget-small warning coloured-icon"><i class='icon bx bxs-shopping-bags fa-3x'></i>
+                            <div class="widget-small warning coloured-icon"><i class='icon bx bxs-user-account fa-3x'></i>
                                 <div class="info">
                                     <h4>Tổng số trưởng nhóm</h4>
                                     <p><b>${requestScope.glUser} người</b></p>
@@ -115,7 +106,7 @@
                         </div>
                         <!-- col-6 -->
                         <div class="col-md-6">
-                            <div class="widget-small danger coloured-icon"><i class='icon bx bxs-error-alt fa-3x'></i>
+                            <div class="widget-small danger coloured-icon"><i class='icon bx bxs-user-account fa-3x'></i>
                                 <div class="info">
                                     <h4>Tổng số nhân viên</h4>
                                     <p><b>${requestScope.sUser} người</b></p>
@@ -123,8 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="tile">
+                        
                                 <style>
 
 
@@ -193,22 +183,19 @@
                                         opacity: 1;
                                     }
                                 </style>
-                                
-                            </div>
-                        </div>
                         
                     </div>
                 </div>
             </div>
 
 
-            <div class="text-center" style="font-size: 13px">
+<!--            <div class="text-center" style="font-size: 13px">
                 <p><b>Copyright
                         <script type="text/javascript">
                             document.write(new Date().getFullYear());
                         </script> Phần mềm quản lý Website
                     </b></p>
-            </div>
+            </div>-->
         </main>
         <script src="admin/js/jquery-3.2.1.min.js"></script>
         <!--===============================================================================================-->

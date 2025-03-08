@@ -5,7 +5,7 @@
 <html lang="en">
 
     <head>
-        <title>Danh sách người dùng | Quản trị Admin</title>
+        <title>Thông tin người dùng</title>
 
         <link rel="shortcut icon" type="image/x-icon" href="support_images/logo1.png" />
         <meta charset="utf-8">
@@ -47,56 +47,60 @@
         <aside class="app-sidebar">
             <div class="app-sidebar__user">
                 <div>
-                    <p class="app-sidebar__user-name"><b>Admin : ${sessionScope.user.getName()}</b></p>
+                    <p class="app-sidebar__user-name"><b>User: ${sessionScope.user.getName()}</b></p>
 
                 </div>
             </div>
             <hr>
             <ul class="app-menu">
-                <li><a class="app-menu__item" href="adminDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
-                            class="app-menu__label">Bảng điều khiển</span></a></li>
-                <li><a class="app-menu__item" href="adminUserManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
-                            class="app-menu__label">Quản lý người dùng</span></a></li>
+                <li><a class="app-menu__item" href="userInfo"><i class='app-menu__icon bx bx-tachometer'></i><span
+                            class="app-menu__label">Thông tin cá nhân</span></a></li>
+                <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
+                            class="app-menu__label">Đơn của tôi</span></a></li>
             </ul>
         </aside>
         <main class="app-content">
             <div class="app-title">
                 <ul class="app-breadcrumb breadcrumb side">
-                    <li class="breadcrumb-item active"><a href="#"><b>Danh sách người dùng</b></a></li>
+                    <li class="breadcrumb-item active"><a href="#"><b>Thông tin người dùng</b></a></li>
                 </ul>
                 <div id="clock"></div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">
-                        <h3 class="tile-title">Thêm người dùng mới</h3>
+                        <h3 class="tile-title">Thông tin của tôi</h3>
                         <div class="tile-body">
-                            <form class="row" action="adminUserManagement?action=addSave" method="post" >
+                            <form class="row" action="userInfo?action=edit" method="post" >
+
+                                <input type="hidden" name="userId" type="text" required value="${user.userId}">
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Tên người dùng</label>
-                                    <input class="form-control" name="name" type="text" required value="">
+                                    <input class="form-control" name="name" type="text" required value="${user.name}">
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Tên đăng nhập</label>
-                                    <input class="form-control" name="username" type="text" value="">
+                                    <input class="form-control" name="username" type="text" value="${user.username}">
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Mật khẩu </label>
-                                    <input class="form-control" name="password" type="text" value="">
+                                    <input class="form-control" name="password" type="text" value="${user.password}">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Email</label>
-                                    <input class="form-control"  name="email" type="text" value="">
+                                    <input class="form-control"  name="email" type="text" value="${user.email}">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Số điện thoại</label>
-                                    <input class="form-control" name="phone" type="text"  value="">
+                                    <input class="form-control" name="phone" type="text"  value="${user.phone}">
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Phòng ban</label>
                                     <select class="form-control" id="exampleFormControlSelect1" name="departmentId">
                                         <c:forEach items="${requestScope.dlist}" var="department">
-                                            <option value="${department.departmentId}">${department.departmentName}</option>
+                                            <option value="${department.departmentId}" ${user.departmentId == department.departmentId ? 'selected' : ''}>
+                                                ${department.departmentName}
+                                            </option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -104,19 +108,21 @@
                                     <label class="control-label">Chức vụ</label>
                                     <select class="form-control" id="exampleFormControlSelect1" name="roleId">
                                         <c:forEach items="${requestScope.rlist}" var="role">
-                                            <option value="${role.roleId}">${role.roleName}</option>
+                                            <option value="${role.roleId}" ${user.roleId == role.roleId ? 'selected' : ''}>
+                                                ${role.roleName}
+                                            </option>
                                         </c:forEach>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Trạng thái</label>
-                                    <select class="form-control" id="exampleFormControlSelect1" name="status">
-                                        <option value="1">Đang hoạt động</option>
-                                        <option value="0">Không hoạt động</option>
+                                    <select class="form-control"  name="status">
+                                        <option value="1" ${user.status == 1 ? 'selected' : ''}>Đang hoạt động</option>
+                                        <option value="0" ${user.status == 0 ? 'selected' : ''}>Không hoạt động</option>
                                     </select>
                                 </div>
                                 <button class="btn btn-save" type="submit">Lưu lại</button>
-                                <a class="btn btn-cancel" href="adminUserManagement">Hủy bỏ</a>
+                                <a class="btn btn-cancel" href="userInfo">Hủy bỏ</a>
                             </form>
                         </div>
 
@@ -183,9 +189,9 @@
             }
         }
         </script>
-        
+
         <script>
-            
+
             var myApp = new function () {
                 this.printTable = function () {
                     var tab = document.getElementById('sampleTable');

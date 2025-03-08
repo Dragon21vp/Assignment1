@@ -5,7 +5,7 @@
 <html lang="en">
 
     <head>
-        <title>Danh sách người dùng | Quản trị Admin</title>
+        <title>Danh sách đơn</title>
 
         <link rel="shortcut icon" type="image/x-icon" href="support_images/logo1.png" />
         <meta charset="utf-8">
@@ -47,23 +47,22 @@
         <aside class="app-sidebar">
             <div class="app-sidebar__user">
                 <div>
-                    <p class="app-sidebar__user-name"><b>Admin : ${sessionScope.user.getName()}</b></p>
+                    <p class="app-sidebar__user-name"><b>User : ${sessionScope.user.getName()}</b></p>
 
                 </div>
             </div>
             <hr>
             <ul class="app-menu">
-                <li><a class="app-menu__item" href="adminDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
-                            class="app-menu__label">Bảng điều khiển</span></a></li>
-                <li><a class="app-menu__item" href="adminUserManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
-                            class="app-menu__label">Quản lý người dùng</span></a></li>
-
+                <li><a class="app-menu__item" href="userInfo"><i class='app-menu__icon bx bx-tachometer'></i><span
+                            class="app-menu__label">Thông tin cá nhân</span></a></li>
+                <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
+                            class="app-menu__label">Đơn của tôi</span></a></li>
             </ul>
         </aside>
         <main class="app-content">
             <div class="app-title">
                 <ul class="app-breadcrumb breadcrumb side">
-                    <li class="breadcrumb-item active"><a href="#"><b>Danh sách người dùng</b></a></li>
+                    <li class="breadcrumb-item active"><a href="#"><b>Danh sách đơn</b></a></li>
                 </ul>
                 <div id="clock"></div>
             </div>
@@ -73,9 +72,9 @@
                         <div class="tile-body">
                             <div class="row element-button">
                                 <div class="col-sm-2">
-                                    <a class="btn btn-add btn-sm" href="adminUserManagement?action=add" title="Thêm"><i
+                                    <a class="btn btn-add btn-sm" href="userApplication?action=add" title="Thêm"><i
                                             class="fas fa-plus"></i>
-                                        Thêm người dùng mới</a>
+                                        Thêm đơn mới</a>
                                 </div>
                                 <div class="col-sm-2">
                                     <a class="btn btn-delete btn-sm print-file" type="button" title="In"
@@ -86,128 +85,94 @@
                             <table class="table table-hover table-bordered" id="sampleTable">
                                 <thead>
                                     <tr>
-                                        <th>Mã người dùng</th>                                          
+                                        <th>Mã đơn</th>                                          
                                         <th>Tên người dùng</th>
-                                        <th>Tài khoản </th>
-                                        <th>Mật khẩu</th>
-                                        <th>Email</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Phòng ban</th>
-                                        <th>Chức vụ</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Lý do</th>
+                                        <th>Ngày bắt đầu </th>
+                                        <th>Ngày kết thúc</th>
                                         <th>Trạng thái</th>
-                                        <th>Chỉnh sửa</th>
+                                        <th>Người duyệt</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${requestScope.ulist}" var="user">
+                                    <c:forEach items="${requestScope.alist}" var="a">
                                         <tr>
-                                            <td>${user.userId}</td>
-                                            <td>${user.name}</td>                                          
-                                            <td>${user.username}</td>
-                                            <td>${user.password}</td>
-                                            <td>${user.email}</td>
-                                            <td>${user.phone}</td>
+                                            <td>${a.applicationId}</td>
+                                            <td>${user.name}</td> 
+                                            <td>${a.title}</td>
+                                            <td>${a.reason}</td>
+                                            <td>${a.startDate}</td>
+                                            <td>${a.endDate}</td>
                                             <td>
-                                                <c:forEach items="${requestScope.dlist}" var="department">
-                                                    <c:if test="${department.departmentId == user.departmentId}">
-                                                        ${department.departmentName}
+                                                <c:forEach items="${requestScope.slist}" var="status">
+                                                    <c:if test="${status.statusId == a.statusId}">
+                                                        ${status.statusName}
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
                                             <td>
-                                                <c:forEach items="${requestScope.rlist}" var="role">
-                                                    <c:if test="${role.roleId == user.roleId}">
-                                                        ${role.roleName}
+                                                <c:forEach items="${requestScope.ulist}" var="u">
+                                                    <c:if test="${u.userId == a.approverId}">
+                                                        ${u.name}
                                                     </c:if>
                                                 </c:forEach>
                                             </td>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${user.status == 1}">Đang hoạt động</c:when>
-                                                    <c:otherwise>Không hoạt động</c:otherwise>
-                                                </c:choose>
-                                            </td>
-
+                                   
                                             <td>
                                                 <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
                                                         id="show-emp"
-                                                        data-toggle="modal" data-target="#ModalUP${user.userId}"><i
+                                                        data-toggle="modal" data-target="#ModalUP${a.applicationId}"><i
                                                         class="fas fa-edit"></i>
                                                 </button>     
                                                 <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                                                        value="${user.userId}"><i
+                                                        value="${a.applicationId}"><i
                                                         class="fas fa-trash-alt"></i>
                                                 </button>                             
                                             </td>
                                         </tr>                      
 
-                                    <div class="modal fade" id="ModalUP${user.userId}" tabindex="-1" role="dialog"
+                                    <div class="modal fade" id="ModalUP${a.applicationId}" tabindex="-1" role="dialog"
                                          aria-hidden="true" data-backdrop="static"
                                          data-keyboard="false">
-                                        <form action="adminUserManagement?action=edit" method="POST">
+                                        <form action="userApplication?action=edit" method="POST">
                                             <div class="modal-dialog modal-dialog-centered" role="document" >
                                                 <div class="modal-content">
                                                     <div class="modal-body">
                                                         <div class="row">
                                                             <div class="form-group  col-md-12">
                                                                 <span class="thong-tin-thanh-toan">
-                                                                    <h5>Chỉnh sửa thông tin người dùng</h5>
+                                                                    <h5>Chỉnh sửa đơn</h5>
                                                                 </span>
                                                             </div>
                                                         </div>
                                                         <div class="row">
+                                                            <input class="form-control" type="hidden" readonly name="applicationId" value="${a.applicationId}">
                                                             <div class="form-group col-md-6">
-                                                                <label class="control-label">Mã người dùng </label>
-                                                                <input class="form-control" type="text" readonly name="userId" value="${user.userId}">
+                                                                <label class="control-label">Tên nhân viên </label>
+                                                                <input class="form-control" type="text" readonly name="name" value="${user.name}">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label class="control-label">Ngày bắt đầu</label>
+                                                                <input class="form-control" type="date" name="startDate" required value="${a.startDate}">
                                                             </div>
 
                                                             <div class="form-group col-md-6">
-                                                                <label class="control-label">Tên người dùng</label>
-                                                                <input class="form-control" type="text" name="name" required value="${user.name}">
+                                                                <label class="control-label">Tiêu đề</label>
+                                                                <input class="form-control" type="text" name="title" required value="${a.title}">
                                                             </div>
+                                                            
                                                             <div class="form-group col-md-6">
-                                                                <label class="control-label">Tên đăng nhập</label>
-                                                                <input class="form-control" type="text" name="username" required value="${user.username}">
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label class="control-label">Mật khẩu</label>
-                                                                <input class="form-control" type="text" name="password" required value="${user.password}">
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label class="control-label">Email</label>
-                                                                <input class="form-control" type="email" name="email" required value="${user.email}">
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label class="control-label">Số điện thoại </label>
-                                                                <input class="form-control" type="text" name="phone" required value="${user.phone}">
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label class="control-label">Phòng ban</label>
-                                                                <select class="form-control" name="departmentId">
-                                                                    <c:forEach items="${requestScope.dlist}" var="department">
-                                                                        <option value="${department.departmentId}" ${user.departmentId == department.departmentId ? 'selected' : ''}>
-                                                                            ${department.departmentName}
-                                                                        </option>
-                                                                    </c:forEach>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label class="control-label">Chức vụ</label>
-                                                                <select class="form-control" name="roleId">
-                                                                    <c:forEach items="${requestScope.rlist}" var="role">
-                                                                        <option value="${role.roleId}" ${user.roleId == role.roleId ? 'selected' : ''}>
-                                                                            ${role.roleName}
-                                                                        </option>
-                                                                    </c:forEach>
-                                                                </select>
+                                                                <label class="control-label">Ngày kết thúc</label>
+                                                                <input class="form-control" type="date" name="endDate" required value="${a.endDate}">
                                                             </div>
                                                             <div class="form-group col-md-12">
-                                                                <label class="control-label">Trạng thái</label>
-                                                                <select class="form-control"  name="status">
-                                                                    <option value="1" ${user.status == 1 ? 'selected' : ''}>Đang hoạt động</option>
-                                                                    <option value="0" ${user.status == 0 ? 'selected' : ''}>Không hoạt động</option>
-                                                                </select>
+                                                                <label class="control-label">Nội dung đơn</label>
+                                                                <textarea class="form-control" name="reason" rows="4" required>${a.reason}</textarea>
                                                             </div>
+                                                           
+
                                                             <button class="btn btn-save" type="submit">Lưu lại</button>
                                                             <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
                                                             <BR>
@@ -220,6 +185,7 @@
                                     MODAL
                                     -->
                                 </c:forEach>
+                                    
                                 </tbody>
                             </table>
                             <%--                    </form>--%>
