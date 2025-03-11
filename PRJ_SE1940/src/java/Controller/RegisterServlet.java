@@ -5,7 +5,9 @@
 
 package Controller;
 
+import Model.Department;
 import Model.User;
+import dal.DepartmentDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
@@ -40,7 +43,13 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        DepartmentDAO ddao = new DepartmentDAO();
+        List<Department> dlist = ddao.getAll();
+        request.setAttribute("dlist", dlist);
+        for(Department d : dlist){
+            System.out.println("DEPARTMENT LIST: "+ d.toString());
+        }
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     } 
 
 
@@ -51,6 +60,10 @@ public class RegisterServlet extends HttpServlet {
         String name = request.getParameter("name");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String departmentIdstr = request.getParameter("departmentId");
+        int departmentId = Integer.parseInt(departmentIdstr);
 
         if (udao.isUsernameTaken(username)) {
             request.setAttribute("message", "Username already exists!");
@@ -58,7 +71,7 @@ public class RegisterServlet extends HttpServlet {
         } else {
             request.setAttribute("successMessage", "Register successful!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
-            User newUser = new User(0, username, password, name, 1); // 1 là role User
+            User newUser = new User(0, username, password, name, email, phone, departmentId, 3, 1 ); // 3 là role User
             udao.addUser(newUser);
             response.sendRedirect("login");
         }

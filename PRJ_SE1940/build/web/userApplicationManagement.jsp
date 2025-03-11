@@ -57,10 +57,10 @@
                             class="app-menu__label">Thông tin cá nhân</span></a></li>
                 <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Đơn của tôi</span></a></li>
-            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
-                <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
-                            class="app-menu__label">Phê duyệt đơn</span></a></li>
-             </c:if>
+                            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
+                    <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
+                                class="app-menu__label">Phê duyệt đơn</span></a></li>
+                            </c:if>
             </ul>
         </aside>
         <main class="app-content">
@@ -76,11 +76,6 @@
                         <div class="tile-body">
                             <div class="row element-button">
                                 <div class="col-sm-2">
-                                    <a class="btn btn-add btn-sm" href="userApplication?action=add" title="Thêm"><i
-                                            class="fas fa-plus"></i>
-                                        Thêm đơn mới</a>
-                                </div>
-                                <div class="col-sm-2">
                                     <a class="btn btn-delete btn-sm print-file" type="button" title="In"
                                        onclick="myApp.printTable()"><i
                                             class="fas fa-print"></i> In dữ liệu</a>
@@ -90,59 +85,63 @@
                                 <thead>
                                     <tr>
                                         <th>Mã đơn</th>                                          
-                                        <th>Tên người dùng</th>
+                                        <th>Tên nhân viên</th>
                                         <th>Tiêu đề</th>
                                         <th>Lý do</th>
                                         <th>Ngày bắt đầu </th>
                                         <th>Ngày kết thúc</th>
                                         <th>Trạng thái</th>
                                         <th>Người duyệt</th>
-                                        <th>Hành động</th>
+                                        <th>Chi tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${requestScope.alist}" var="a">
-                                        <tr>
-                                            <td>${a.applicationId}</td>
-                                            <td>${user.name}</td> 
-                                            <td>${a.title}</td>
-                                            <td>${a.reason}</td>
-                                            <td>${a.startDate}</td>
-                                            <td>${a.endDate}</td>
-                                            <td>
-                                                <c:forEach items="${requestScope.slist}" var="status">
-                                                    <c:if test="${status.statusId == a.statusId}">
-                                                        ${status.statusName}
-                                                    </c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td>
-                                                <c:forEach items="${requestScope.ulist}" var="u">
-                                                    <c:if test="${u.userId == a.userId}">
-                                                        ${u.name}
-                                                    </c:if>
-                                                </c:forEach>
-                                            </td>
+                                        <c:if test="${a.statusId != 4}">
+                                            <tr>
+                                                <td>${a.applicationId}</td>
+                                                <td>
+                                                    <c:forEach items="${requestScope.ulist}" var="u">
+                                                        <c:if test="${u.userId == a.userId}">
+                                                            ${u.name}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td> 
+                                                <td>${a.title}</td>
+                                                <td>${a.reason}</td>
+                                                <td>${a.startDate}</td>
+                                                <td>${a.endDate}</td>
+                                                <td>
+                                                    <c:forEach items="${requestScope.slist}" var="status">
+                                                        <c:if test="${status.statusId == a.statusId}">
+                                                            ${status.statusName}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
+                                                <td>
+                                                    <c:forEach items="${requestScope.ulist}" var="u">
+                                                        <c:if test="${u.userId == a.approverId}">
+                                                            ${u.name}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
 
-                                            <td>
-                                                <c:if test="${a.statusId != 4}">
-                                                    <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
+                                                <td>
+
+                                                    <button class="btn btn-primary btn-sm edit" type="button" title="Chi tiết"
                                                             id="show-emp"
                                                             data-toggle="modal" data-target="#ModalUP${a.applicationId}">
                                                         <i class="fas fa-edit"></i>
-                                                    </button>     
-                                                    <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                                                            value="${a.applicationId}">
-                                                        <i class="fas fa-trash-alt"></i>
                                                     </button>
-                                                </c:if>                            
-                                            </td>
-                                        </tr>                      
+
+                                                </td>
+                                            </tr>      
+                                        </c:if>  
 
                                     <div class="modal fade" id="ModalUP${a.applicationId}" tabindex="-1" role="dialog"
                                          aria-hidden="true" data-backdrop="static"
                                          data-keyboard="false">
-                                        <form action="userApplication?action=edit" method="POST">
+                                        <form action="userApplicationManagement?action=edit" method="POST">
                                             <div class="modal-dialog modal-dialog-centered" role="document" >
                                                 <div class="modal-content">
                                                     <div class="modal-body">
@@ -157,26 +156,43 @@
                                                             <input class="form-control" type="hidden" readonly name="applicationId" value="${a.applicationId}">
                                                             <div class="form-group col-md-6">
                                                                 <label class="control-label">Tên nhân viên </label>
-                                                                <input class="form-control" type="text" readonly name="name" value="${user.name}">
+                                                                <c:forEach items="${requestScope.ulist}" var="u">
+                                                                    <c:if test="${u.userId == a.userId}">
+                                                                        <input class="form-control" type="text" readonly name="name" value="${u.name}">
+                                                                        
+                                                                    </c:if>
+                                                                </c:forEach>
                                                             </div>
+                                                            <input type="hidden" name="userId" value="${a.userId}">
                                                             <div class="form-group col-md-6">
                                                                 <label class="control-label">Ngày bắt đầu</label>
-                                                                <input class="form-control" type="date" name="startDate" required value="${a.startDate}">
+                                                                <input class="form-control" type="date" readonly name="startDate" required value="${a.startDate}">
                                                             </div>
 
                                                             <div class="form-group col-md-6">
                                                                 <label class="control-label">Tiêu đề</label>
-                                                                <input class="form-control" type="text" name="title" required value="${a.title}">
+                                                                <input class="form-control" type="text" readonly name="title" required value="${a.title}">
                                                             </div>
 
                                                             <div class="form-group col-md-6">
                                                                 <label class="control-label">Ngày kết thúc</label>
-                                                                <input class="form-control" type="date" name="endDate" required value="${a.endDate}">
+                                                                <input class="form-control" type="date" readonly name="endDate" required value="${a.endDate}">
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label class="control-label">Nội dung đơn</label>
-                                                                <textarea class="form-control" name="reason" rows="4" required>${a.reason}</textarea>
+                                                                <textarea class="form-control" name="reason" readonly rows="4" required>${a.reason}</textarea>
                                                             </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label class="control-label">Trạng thái</label>
+                                                                <select class="form-control" name="statusId">
+                                                                    <c:forEach items="${requestScope.slist}" var="s">
+                                                                        <option value="${s.statusId}" ${a.statusId == s.statusId ? 'selected' : ''}>
+                                                                            ${s.statusName}
+                                                                        </option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                            <input type="hidden" name="approverId" value = "${sessionScope.user.userId}">
 
 
                                                             <button class="btn btn-save" type="submit">Lưu lại</button>

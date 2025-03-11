@@ -7,7 +7,6 @@ package Controller;
 import Model.User;
 import dal.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -65,10 +64,10 @@ public class LoginServlet extends HttpServlet {
             } else {
                 session.setAttribute("user", a);
 
-                if (a.getRole() == 0) {
-                    response.sendRedirect("userManagement");
+                if (a.getRoleId() == 0) {
+                    response.sendRedirect("adminDashboard");
                 } else {
-                    response.sendRedirect("user");
+                    response.sendRedirect("userInfo");
                 }
             }
         } catch (Exception e) {
