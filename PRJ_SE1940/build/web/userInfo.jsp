@@ -57,10 +57,12 @@
                             class="app-menu__label">Thông tin cá nhân</span></a></li>
                 <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Đơn của tôi</span></a></li>
-            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
-                <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
-                            class="app-menu__label">Phê duyệt đơn</span></a></li>
-             </c:if>
+                            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
+                    <li><a class="app-menu__item" href="userApplicationDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+                                class="app-menu__label">Thống kê đơn</span></a></li>
+                    <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
+                                class="app-menu__label">Phê duyệt đơn</span></a></li>
+                            </c:if>
             </ul>
         </aside>
         <main class="app-content">
@@ -75,7 +77,7 @@
                     <div class="tile">
                         <h3 class="tile-title">Thông tin của tôi</h3>
                         <div class="tile-body">
-                            <form class="row" action="userInfo?action=edit" method="post" >
+                            <form class="row" action="userInfo?action=edit" method="post" onsubmit="return validateForm()" >
 
                                 <input type="hidden" name="userId" type="text" required value="${user.userId}">
                                 <div class="form-group col-md-6">
@@ -84,19 +86,22 @@
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Tên đăng nhập</label>
-                                    <input class="form-control" name="username" type="text" value="${user.username}">
+                                    <input class="form-control" name="username" type="text" required value="${user.username}">
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Mật khẩu </label>
-                                    <input class="form-control" name="password" type="text" value="${user.password}">
+                                    <input class="form-control" name="password" type="text" required value="${user.password}">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Email</label>
-                                    <input class="form-control"  name="email" type="text" value="${user.email}">
+                                    <input class="form-control" id="email" name="email" type="text" required value="${user.email}">
+                                    <small id="emailError" class="text-danger"></small> <!-- Thông báo lỗi -->
                                 </div>
+
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Số điện thoại</label>
-                                    <input class="form-control" name="phone" type="text"  value="${user.phone}">
+                                    <input class="form-control" id="phone" name="phone" type="text" required value="${user.phone}">
+                                    <small id="phoneError" class="text-danger"></small> <!-- Thông báo lỗi -->
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Phòng ban</label>
@@ -150,48 +155,80 @@
         <script type="text/javascript" src="admin/js/plugins/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="admin/js/plugins/dataTables.bootstrap.min.js"></script>
         <script type="text/javascript">
-        $('#sampleTable').DataTable();
+                                $('#sampleTable').DataTable();
 
-        //Thời Gian
-        function time() {
-            var today = new Date();
-            var weekday = new Array(7);
-            weekday[0] = "Chủ Nhật";
-            weekday[1] = "Thứ Hai";
-            weekday[2] = "Thứ Ba";
-            weekday[3] = "Thứ Tư";
-            weekday[4] = "Thứ Năm";
-            weekday[5] = "Thứ Sáu";
-            weekday[6] = "Thứ Bảy";
-            var day = weekday[today.getDay()];
-            var dd = today.getDate();
-            var mm = today.getMonth() + 1;
-            var yyyy = today.getFullYear();
-            var h = today.getHours();
-            var m = today.getMinutes();
-            var s = today.getSeconds();
-            m = checkTime(m);
-            s = checkTime(s);
-            nowTime = h + " giờ " + m + " phút " + s + " giây";
-            if (dd < 10) {
-                dd = '0' + dd
-            }
-            if (mm < 10) {
-                mm = '0' + mm
-            }
-            today = day + ', ' + dd + '/' + mm + '/' + yyyy;
-            tmp = '<span class="date"> ' + today + ' - ' + nowTime +
-                    '</span>';
-            document.getElementById("clock").innerHTML = tmp;
-            clocktime = setTimeout("time()", "1000", "Javascript");
+                                //Thời Gian
+                                function time() {
+                                    var today = new Date();
+                                    var weekday = new Array(7);
+                                    weekday[0] = "Chủ Nhật";
+                                    weekday[1] = "Thứ Hai";
+                                    weekday[2] = "Thứ Ba";
+                                    weekday[3] = "Thứ Tư";
+                                    weekday[4] = "Thứ Năm";
+                                    weekday[5] = "Thứ Sáu";
+                                    weekday[6] = "Thứ Bảy";
+                                    var day = weekday[today.getDay()];
+                                    var dd = today.getDate();
+                                    var mm = today.getMonth() + 1;
+                                    var yyyy = today.getFullYear();
+                                    var h = today.getHours();
+                                    var m = today.getMinutes();
+                                    var s = today.getSeconds();
+                                    m = checkTime(m);
+                                    s = checkTime(s);
+                                    nowTime = h + " giờ " + m + " phút " + s + " giây";
+                                    if (dd < 10) {
+                                        dd = '0' + dd
+                                    }
+                                    if (mm < 10) {
+                                        mm = '0' + mm
+                                    }
+                                    today = day + ', ' + dd + '/' + mm + '/' + yyyy;
+                                    tmp = '<span class="date"> ' + today + ' - ' + nowTime +
+                                            '</span>';
+                                    document.getElementById("clock").innerHTML = tmp;
+                                    clocktime = setTimeout("time()", "1000", "Javascript");
 
-            function checkTime(i) {
-                if (i < 10) {
-                    i = "0" + i;
-                }
-                return i;
-            }
-        }
+                                    function checkTime(i) {
+                                        if (i < 10) {
+                                            i = "0" + i;
+                                        }
+                                        return i;
+                                    }
+                                }
+                                function validateForm() {
+                                    let isValid = true; // Biến kiểm tra trạng thái hợp lệ của form
+
+                                    // Lấy giá trị của các input
+                                    let email = document.getElementById("email").value.trim();
+                                    let phone = document.getElementById("phone").value.trim();
+
+                                    // Lấy phần hiển thị lỗi
+                                    let emailError = document.getElementById("emailError");
+                                    let phoneError = document.getElementById("phoneError");
+
+                                    // Reset lỗi trước khi kiểm tra
+                                    emailError.innerText = "";
+                                    phoneError.innerText = "";
+
+                                    // Biểu thức chính quy kiểm tra email hợp lệ
+                                    let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                                    if (!emailRegex.test(email)) {
+                                        emailError.innerText = "Email không hợp lệ!";
+                                        isValid = false;
+                                    }
+
+                                    // Biểu thức chính quy kiểm tra số điện thoại (10 số, bắt đầu bằng 0, không chứa ký tự đặc biệt)
+                                    let phoneRegex = /^(0[1-9][0-9]{8})$/;
+                                    if (!phoneRegex.test(phone)) {
+                                        phoneError.innerText = "Số điện thoại không hợp lệ! (10 chữ số, bắt đầu bằng 0)";
+                                        isValid = false;
+                                    }
+
+                                    return isValid; // Trả về `true` nếu hợp lệ, `false` nếu có lỗi (chặn gửi form)
+                                }
+
         </script>
 
         <script>

@@ -71,7 +71,7 @@
                     <div class="tile">
                         <h3 class="tile-title">Thêm người dùng mới</h3>
                         <div class="tile-body">
-                            <form class="row" action="adminUserManagement?action=addSave" method="post" >
+                            <form class="row" action="adminUserManagement?action=addSave" method="post" onsubmit="return validateForm()" >
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Tên người dùng</label>
                                     <input class="form-control" name="name" type="text" required value="">
@@ -86,11 +86,14 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Email</label>
-                                    <input class="form-control"  name="email" type="text" value="">
+                                    <input class="form-control" id="email" name="email" type="text" required >
+                                    <small id="emailError" class="text-danger"></small> <!-- Thông báo lỗi -->
                                 </div>
+
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Số điện thoại</label>
-                                    <input class="form-control" name="phone" type="text"  value="">
+                                    <input class="form-control" id="phone" name="phone" type="text" required >
+                                    <small id="phoneError" class="text-danger"></small> <!-- Thông báo lỗi -->
                                 </div>
                                 <div class="form-group  col-md-6">
                                     <label class="control-label">Phòng ban</label>
@@ -182,6 +185,38 @@
                 return i;
             }
         }
+        function validateForm() {
+                                    let isValid = true; // Biến kiểm tra trạng thái hợp lệ của form
+
+                                    // Lấy giá trị của các input
+                                    let email = document.getElementById("email").value.trim();
+                                    let phone = document.getElementById("phone").value.trim();
+
+                                    // Lấy phần hiển thị lỗi
+                                    let emailError = document.getElementById("emailError");
+                                    let phoneError = document.getElementById("phoneError");
+
+                                    // Reset lỗi trước khi kiểm tra
+                                    emailError.innerText = "";
+                                    phoneError.innerText = "";
+
+                                    // Biểu thức chính quy kiểm tra email hợp lệ
+                                    let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                                    if (!emailRegex.test(email)) {
+                                        emailError.innerText = "Email không hợp lệ!";
+                                        isValid = false;
+                                    }
+
+                                    // Biểu thức chính quy kiểm tra số điện thoại (10 số, bắt đầu bằng 0, không chứa ký tự đặc biệt)
+                                    let phoneRegex = /^(0[1-9][0-9]{8})$/;
+                                    if (!phoneRegex.test(phone)) {
+                                        phoneError.innerText = "Số điện thoại không hợp lệ! (10 chữ số, bắt đầu bằng 0)";
+                                        isValid = false;
+                                    }
+
+                                    return isValid; // Trả về `true` nếu hợp lệ, `false` nếu có lỗi (chặn gửi form)
+                                }
+
         </script>
         
         <script>

@@ -57,10 +57,12 @@
                             class="app-menu__label">Thông tin cá nhân</span></a></li>
                 <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Đơn của tôi</span></a></li>
-            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
-                <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
-                            class="app-menu__label">Phê duyệt đơn</span></a></li>
-             </c:if>
+                            <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
+                    <li><a class="app-menu__item" href="userApplicationDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+                                class="app-menu__label">Thống kê đơn</span></a></li>
+                    <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
+                                class="app-menu__label">Phê duyệt đơn</span></a></li>
+                            </c:if>
             </ul>
         </aside>
         <main class="app-content">
@@ -125,7 +127,7 @@
                                             </td>
 
                                             <td>
-                                                <c:if test="${a.statusId != 4}">
+                                                <c:if test="${a.statusId == 1}">
                                                     <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
                                                             id="show-emp"
                                                             data-toggle="modal" data-target="#ModalUP${a.applicationId}">

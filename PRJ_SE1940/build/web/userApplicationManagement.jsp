@@ -58,6 +58,8 @@
                 <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Đơn của tôi</span></a></li>
                             <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
+                    <li><a class="app-menu__item" href="userApplicationDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+                                class="app-menu__label">Thống kê đơn</span></a></li>
                     <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
                                 class="app-menu__label">Phê duyệt đơn</span></a></li>
                             </c:if>
@@ -159,7 +161,7 @@
                                                                 <c:forEach items="${requestScope.ulist}" var="u">
                                                                     <c:if test="${u.userId == a.userId}">
                                                                         <input class="form-control" type="text" readonly name="name" value="${u.name}">
-                                                                        
+
                                                                     </c:if>
                                                                 </c:forEach>
                                                             </div>
@@ -184,19 +186,47 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label class="control-label">Trạng thái</label>
-                                                                <select class="form-control" name="statusId">
-                                                                    <c:forEach items="${requestScope.slist}" var="s">
+                                                                <select class="form-control" name="statusId"
+                                                                        <c:set var="disableCondition" value="false"/>
+                                                                        <c:forEach items="${requestScope.ulist}" var="u">
+                                                                            <c:if test="${u.userId == a.userId}">
+                                                                                <c:if test="${sessionScope.user.roleId > u.roleId}">
+                                                                                    <c:set var="disableCondition" value="true"/>
+                                                                                </c:if>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                        ${a.statusId != 1 || disableCondition == 'true' ? 'disabled' : ''}
+                                                                        >
+                                                                    <c:forEach items="${requestScope.slist2}" var="s">
                                                                         <option value="${s.statusId}" ${a.statusId == s.statusId ? 'selected' : ''}>
                                                                             ${s.statusName}
                                                                         </option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
+
                                                             <input type="hidden" name="approverId" value = "${sessionScope.user.userId}">
 
 
-                                                            <button class="btn btn-save" type="submit">Lưu lại</button>
-                                                            <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                                                            <c:set var="canEdit" value="false"/>
+                                                            <c:forEach items="${requestScope.ulist}" var="u">
+                                                                <c:if test="${u.userId == a.userId}">
+                                                                    <c:if test="${sessionScope.user.roleId <= u.roleId}">
+                                                                        <c:set var="canEdit" value="true"/>
+                                                                    </c:if>
+                                                                </c:if>
+                                                            </c:forEach>
+
+                                                            <c:if test="${a.statusId == 1 && canEdit == 'true'}">
+                                                                <!-- Chỉ hiển thị nếu statusId == 1 và có quyền chỉnh sửa -->
+                                                                <button class="btn btn-save" type="submit">Lưu lại</button>
+                                                                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                                                            </c:if>
+
+                                                            <c:if test="${a.statusId != 1 || canEdit == 'false'}">
+                                                                <!-- Nếu statusId khác 1 hoặc không có quyền chỉnh sửa, chỉ hiển thị nút Trở lại -->
+                                                                <a class="btn btn-cancel" data-dismiss="modal" href="#">Trở lại</a>
+                                                            </c:if>
                                                             <BR>
                                                         </div>
                                                     </div>
