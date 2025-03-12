@@ -54,10 +54,11 @@
             </div>
             <hr>
             <ul class="app-menu">
-                <li><a class="app-menu__item" href="adminDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+                <li><a class="app-menu__item" href="adminDashboard"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Bảng điều khiển</span></a></li>
-                <li><a class="app-menu__item" href="adminUserManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
+                <li><a class="app-menu__item" href="adminUserManagement"><i class='app-menu__icon bx bx-tachometer'></i><span
                             class="app-menu__label">Quản lý người dùng</span></a></li>
+
             </ul>
         </aside>
         <main class="app-content">

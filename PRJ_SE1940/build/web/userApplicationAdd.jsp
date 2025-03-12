@@ -53,15 +53,17 @@
             </div>
             <hr>
             <ul class="app-menu">
-                <li><a class="app-menu__item" href="userInfo"><i class='app-menu__icon bx bx-tachometer'></i><span
+                <li><a class="app-menu__item" href="userInfo"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Thông tin cá nhân</span></a></li>
                 <li><a class="app-menu__item" href="userApplication"><i class='app-menu__icon bx bx-user-voice'></i><span
                             class="app-menu__label">Đơn của tôi</span></a></li>
                             <c:if test="${sessionScope.user.roleId == 1 || sessionScope.user.roleId == 2}">
                     <li><a class="app-menu__item" href="userApplicationDashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
                                 class="app-menu__label">Thống kê đơn</span></a></li>
-                    <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-user-voice'></i><span
+                    <li><a class="app-menu__item" href="userApplicationManagement"><i class='app-menu__icon bx bx-tachometer'></i><span
                                 class="app-menu__label">Phê duyệt đơn</span></a></li>
+                    <li><a class="app-menu__item" href="statistic"><i class='app-menu__icon bx bx-tachometer'></i><span
+                                class="app-menu__label">Bảng dữ liệu</span></a></li>
                             </c:if>
             </ul>
         </aside>
@@ -79,6 +81,30 @@
                         <div class="tile-body">
                             <form class="row" action="userApplication?action=addSave" method="post" >
                                 <input class="form-control" name="userId" type="hidden" required value="${user.userId}">
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Tên nhân viên:</label>
+                                    <input class="form-control" readonly name="name" type="text" required value="${user.name}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Chức vụ:</label>
+                                    <select class="form-control" name="roleId"disabled>
+                                        <c:forEach items="${requestScope.rlist}" var="role" >
+                                            <option value="${role.roleId}" ${user.roleId == role.roleId ? 'selected' : ''}>
+                                                ${role.roleName}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Phòng ban:</label>
+                                    <select class="form-control" name="departmentId" disabled>
+                                        <c:forEach items="${requestScope.dlist}" var="department">
+                                            <option value="${department.departmentId}" ${user.departmentId == department.departmentId ? 'selected' : ''}>
+                                                ${department.departmentName}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                                 <div class="form-group col-md-12">
                                     <label class="control-label">Tiêu đề</label>
                                     <input class="form-control" name="title" type="text" required value="">
@@ -95,7 +121,7 @@
                                     <label class="control-label">Nội dung đơn</label>
                                     <textarea class="form-control" type="text" row="4" name="reason" required value="${a.reason}"></textarea>
                                 </div>
-                                
+
                                 <button class="btn btn-save" type="submit">Lưu lại</button>
                                 <a class="btn btn-cancel" href="userApplication">Hủy bỏ</a>
                             </form>
