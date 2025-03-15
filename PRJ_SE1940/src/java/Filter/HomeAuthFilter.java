@@ -4,6 +4,7 @@
  */
 package Filter;
 
+import Model.User;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -110,18 +111,47 @@ public class HomeAuthFilter implements Filter {
     HttpSession session = httpRequest.getSession(false);
     boolean loggedIn = (session != null && session.getAttribute("user") != null);
     
-    String requestURI = httpRequest.getRequestURI(); 
-    boolean isLoginPage = requestURI.endsWith("/login"); // Kiểm tra nếu đang ở trang login
+    String requestURI = httpRequest.getRequestURI();
+    
+    boolean isLoginPage = requestURI.endsWith("/login");
+    boolean isRegisterPage = requestURI.endsWith("/register");
+    boolean isLogoutPage = requestURI.endsWith("/logout");
+    boolean isUserInfoPage = requestURI.endsWith("/userInfo");
+    boolean isUserApplicationPage = requestURI.endsWith("/userApplication");
 
-    if (!loggedIn && !isLoginPage) {
+    boolean isDashboardPage = requestURI.endsWith("/userApplicationDashboard");
+    boolean isManagementPage = requestURI.endsWith("/userApplicationManagement");
+    boolean isStatisticPage = requestURI.endsWith("/statistic");
+
+    // Các trang mà roleId = 3 được phép vào
+    boolean allowedForRole3 = isLoginPage || isRegisterPage || isLogoutPage || isUserInfoPage || isUserApplicationPage;
+    // Các trang mà roleId = 1 và 2 được phép vào
+    boolean allowedForRole1And2 = allowedForRole3 || isDashboardPage || isManagementPage || isStatisticPage;
+
+    if (!loggedIn && !isLoginPage && !isRegisterPage) {
         // Nếu chưa đăng nhập và không phải trang login, chuyển hướng về login
         httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
         return;
     }
 
-    // Nếu đã đăng nhập hoặc đang ở trang login, tiếp tục xử lý request
+    if (loggedIn) {
+        User user = (User) session.getAttribute("user");
+        int roleId = user.getRoleId();
+
+        if (roleId == 3 && !allowedForRole3) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/userApplication"); // Chuyển hướng về trang hợp lệ
+            return;
+        } else if ((roleId == 1 || roleId == 2) && !allowedForRole1And2) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/userApplicationDashboard");
+            return;
+        } 
+        // roleId = 0 có thể truy cập tất cả nên không cần kiểm tra
+    }
+
+    // Tiếp tục xử lý request nếu hợp lệ
     chain.doFilter(request, response);
 }
+
 
 
     /**

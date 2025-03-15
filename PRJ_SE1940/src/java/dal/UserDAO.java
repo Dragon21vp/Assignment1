@@ -20,7 +20,7 @@ public class UserDAO extends DBcontext {
     //Login
     public User getUserByUsernameAndPassword(String username, String password) {
         User account = null;
-        String query = "SELECT * FROM Users WHERE username = ? AND password=?";
+        String query = "SELECT * FROM Users WHERE username = ? AND password=? AND status=1";
         try {
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, username);
@@ -29,8 +29,12 @@ public class UserDAO extends DBcontext {
             if (rs.next()) {
                 int userId = rs.getInt("UserID");
                 String name = rs.getString("Name");
-                int role = rs.getInt("Role");
-                account = new User(userId, username, password, name, role);
+                String email = rs.getString("Email");
+                String phone = rs.getString("Phone");
+                int departmentId = rs.getInt("DepartmentID");
+                int roleId = rs.getInt("RoleID");
+                int status = rs.getInt("Status");
+                account = new User(userId, username, password, name, email, phone, departmentId, roleId, status);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,8 +54,38 @@ public class UserDAO extends DBcontext {
                 String username = rs.getString("Username");
                 String password = rs.getString("Password");
                 String name = rs.getString("Name");
-                int role = rs.getInt("Role");
-                User user = new User(userId, username, password, name, role);
+                String email = rs.getString("Email");
+                String phone = rs.getString("Phone");
+                int departmentId = rs.getInt("DepartmentID");
+                int roleId = rs.getInt("RoleID");
+                int status = rs.getInt("Status");
+                User user = new User(userId, username, password, name, email, phone, departmentId, roleId, status);
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    //GetAll != admin
+    public List<User> getAll2() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM Users where userId !=1";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int userId = rs.getInt("UserID");
+                String username = rs.getString("Username");
+                String password = rs.getString("Password");
+                String name = rs.getString("Name");
+                String email = rs.getString("Email");
+                String phone = rs.getString("Phone");
+                int departmentId = rs.getInt("DepartmentID");
+                int roleId = rs.getInt("RoleID");
+                int status = rs.getInt("Status");
+                User user = new User(userId, username, password, name, email, phone, departmentId, roleId, status);
                 list.add(user);
             }
         } catch (SQLException e) {
@@ -62,14 +96,17 @@ public class UserDAO extends DBcontext {
 
     //Add
     public void addUser(User user) {
-        String query = "INSERT INTO Users (username, password, name, role) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Users (username, password, name, email, phone, departmentId, roleId, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, user.getUsername());
             st.setString(2, user.getPassword());
             st.setString(3, user.getName());
-            st.setInt(4, user.getRole());
-
+            st.setString(4, user.getEmail());
+            st.setString(5, user.getPhone());
+            st.setInt(6, user.getDepartmentId());
+            st.setInt(7, user.getRoleId());
+            st.setInt(8, user.getStatus());
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,21 +115,39 @@ public class UserDAO extends DBcontext {
 
     //Edit
     public void updateUser(User user) {
-        String query = "UPDATE Users SET username = ?, password = ?, name = ?, role = ? WHERE userID = ?";
+        String query = "UPDATE Users SET username = ?, password = ?, name = ?, email = ?, phone = ?, departmentId = ?, roleId = ?, status = ? WHERE userID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, user.getUsername());
             st.setString(2, user.getPassword());
             st.setString(3, user.getName());
-            st.setInt(4, user.getRole());
-            st.setInt(5, user.getUserId());
+            st.setString(4, user.getEmail());
+            st.setString(5, user.getPhone());
+            st.setInt(6, user.getDepartmentId());
+            st.setInt(7, user.getRoleId());
+            st.setInt(8, user.getStatus());
+            st.setInt(9, user.getUserId());
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    //Delete
+    //Delete (xóa mềm)
+    public void deleteUser(int userId, int status) {
+
+        String query = "UPDATE Users SET status = ? WHERE userID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            st.setInt(1, status);
+            st.setInt(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    //Delete (xóa cứng)
     public void deleteUser(int userId) {
 
         String sql2 = "DELETE from Users where userID=?";
@@ -114,12 +169,15 @@ public class UserDAO extends DBcontext {
             st.setInt(1, userId);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String name = rs.getString("name");
-                int role = rs.getInt("role");
-
-                user = new User(userId, username, password, name, role);
+                String username = rs.getString("Username");
+                String password = rs.getString("Password");
+                String name = rs.getString("Name");
+                String email = rs.getString("Email");
+                String phone = rs.getString("Phone");
+                int departmentId = rs.getInt("DepartmentID");
+                int roleId = rs.getInt("RoleID");
+                int status = rs.getInt("Status");
+                user = new User(userId, username, password, name, email, phone, departmentId, roleId, status);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,5 +197,93 @@ public class UserDAO extends DBcontext {
             e.printStackTrace();
         }
         return false;
+    }
+    
+//Filter
+    public List<User> filterByRole(int roleId) {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE RoleID =?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            
+            st.setInt(1,roleId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int userId = rs.getInt("UserID");
+                String username = rs.getString("Username");
+                String password = rs.getString("Password");
+                String name = rs.getString("Name");
+                String email = rs.getString("Email");
+                String phone = rs.getString("Phone");
+                int departmentId = rs.getInt("DepartmentID");
+                int status = rs.getInt("Status");
+                User user = new User(userId, username, password, name, email, phone, departmentId, roleId, status);
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+//Count 
+    //Count Total Users
+    public int countTotalUsers() {
+        String sql = "SELECT COUNT(*) FROM Users";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
+    }
+    
+    //Count DepartmentManager Users
+    public int countDepartmentManagerUsers() {
+        String sql = "SELECT COUNT(*) FROM Users WHERE RoleID=1";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
+    }
+    
+    //Count GroupLeader Users
+    public int countGroupLeaderUsers() {
+        String sql = "SELECT COUNT(*) FROM Users WHERE RoleID=2";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
+    }
+    
+    //Count Staff Users
+    public int countStaffUsers() {
+        String sql = "SELECT COUNT(*) FROM Users WHERE RoleID=3";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
     }
 }
