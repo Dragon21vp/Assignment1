@@ -9,23 +9,40 @@
 <html>  
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Login</title>
+        <title>Register</title>
     </head>
     <body>
         <h3><center>Register</center></h3>
-        <form method="post" action="register">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        <div class="formRegister">
+            <form method="post" action="register">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter username" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter password" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
 
-            <input type="submit" value="Register">
-            <a href="login">Already have an account? Login here</a>
-        </form>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email" required>
+
+                <label for="phone">Phone number</label>
+                <input type="phone" id="phone" name="phone" placeholder="Enter phone number" required>
+
+                <label for ="department">Department</label>
+                <select class="form-select" id="exampleFormControlSelect1" name="departmentId">
+                    <c:forEach items="${requestScope.dlist}" var="d">
+                        <option value="${d.getDepartmentId()}">
+                            ${d.getDepartmentName()}
+                        </option>
+                    </c:forEach>
+                </select>
+
+                <input type="submit" value="Register">
+                <a href="login">Already have an account? Login here</a>
+            </form>
+        </div>
 
         <c:if test="${not empty message}">
         <center><h2 style="color: red">${message}</h2></center>
@@ -44,13 +61,16 @@
     body {
         font-family: Arial, sans-serif;
         background: linear-gradient(to right, #6a11cb, #2575fc);
-        display: flex;
-        justify-content: center;
-        align-items: center;
         height: 100vh;
         margin: 0;
     }
 
+    .formRegister{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
     h3 {
         color: white;
         text-align: center;
@@ -72,16 +92,21 @@
         margin: 15px 0 5px;
         font-weight: bold;
         font-size: 16px;
+        text-align: left;
     }
 
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="email"],
+    input[type="phone"],
+    select {
         width: 100%;
         padding: 12px;
         margin-bottom: 20px;
         border: 2px solid #ccc;
         border-radius: 8px;
         font-size: 16px;
+        box-sizing: border-box;
     }
 
     input[type="submit"] {
@@ -113,6 +138,7 @@
     a:hover {
         color: #2575fc;
     }
+
 
 </style>
 

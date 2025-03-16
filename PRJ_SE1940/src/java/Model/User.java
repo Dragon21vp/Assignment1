@@ -9,19 +9,26 @@ package Model;
  * @author ADMIN
  */
 public class User {
-    private int userId;
+    private int userId; 
     private String username;
     private String password;
     private String name;
-    private int role;
+    private String email;
+    private String phone;
+    private int departmentId;
+    private int roleId;
+    private int status;
 
-
-    public User(int userId, String username, String password, String name, int role) {
+    public User(int userId, String username, String password, String name, String email, String phone, int departmentId, int roleId, int status) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.name = name;
-        this.role = role;
+        this.email = email;
+        this.phone = phone;
+        this.departmentId = departmentId;
+        this.roleId = roleId;
+        this.status = status;
     }
 
     public int getUserId() {
@@ -56,17 +63,49 @@ public class User {
         this.name = name;
     }
 
-    public int getRole() {
-        return role;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRole(int role) {
-        this.role = role;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "\n User{" + "userId=" + userId + ", username=" + username + ", password=" + password + ", name=" + name + ", role=" + role + '}';
+        return "\n User{" + "userId=" + userId + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", phone=" + phone + ", departmentId=" + departmentId + ", roleId=" + roleId + ", status=" + status  + '}';
     }
     
 }
